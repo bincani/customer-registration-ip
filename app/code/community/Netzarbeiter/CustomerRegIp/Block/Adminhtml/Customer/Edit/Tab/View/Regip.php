@@ -64,6 +64,37 @@ class Netzarbeiter_CustomerRegIp_Block_Adminhtml_Customer_Edit_Tab_View_Regip
         return $html;
     }
 
+    public function getCustomerRequest()
+    {
+        $httpRequest = $this->getCustomer()->getRegistrationHttpRequest();
+        return $httpRequest;
+    }
+
+    /**
+     * Return the customer rquest
+     *
+     * @return string
+     */
+    public function getCustomerRequestHtml()
+    {
+        $httpRequest = $this->getCustomer()->getRegistrationHttpRequest();
+        if (empty($httpRequest)) {
+            $html = $this->__('- REQUEST INFO UNAVAILABLE -');
+        } else {
+            $storeId = Mage::app()->getWebsite(true)->getDefaultGroup()->getDefaultStoreId();
+            $baseUrl = Mage::getBaseUrl(); // will get admin url
+            $baseUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+            $pattern = sprintf("/%s/", str_replace("/", "\/", $baseUrl) );
+            // for debug
+            //$html = sprintf("<pre>%s</pre>", $pattern);
+            if (preg_match($pattern, $httpRequest)) {
+                $httpRequest = preg_replace($pattern, "", $httpRequest);
+            }
+            $html .= sprintf('%s', $httpRequest);
+        }
+        return $html;
+    }
+
     /**
      *
      * @return bool

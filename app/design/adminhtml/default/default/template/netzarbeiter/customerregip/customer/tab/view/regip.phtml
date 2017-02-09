@@ -20,27 +20,40 @@
 /* @var $this Netzarbeiter_CustomerRegIp_Block_Adminhtml_Customer_Edit_Tab_View_Regip */
 ?>
 <div class="entry-edit">
-    <div class="entry-edit-head"><h4 class="icon-head head-customer-view-remoteip">
-	<?php if ($this->isCustomerCreatedInAdmin()): ?>
-		<?php echo $this->__('Admin IP during creation') ?>
-	<?php else: ?>
-		<?php echo $this->__('Remote IP during registration') ?>
-	<?php endif; ?>
-	</h4></div>
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-customer-view-remoteip">HTTP Request Information</h4>
+    </div>
     <fieldset>
         <table cellspacing="2" class="box-left">
             <tr>
-                <td><strong><?php echo $this->__('Remote Address:') ?></strong> <?php echo $this->getCustomerRegIpHtml() ?></td>
-				<?php if ($this->isValidIp()): ?>
-				<td>
-					<?php if ($this->isIpInfoDbEnabled()): ?>
-					<button onclick="customerRegIp.lookup(); return false;"
-							title="<?php echo $this->__('Check the location of %s via AJAX', $this->getCustomerRegIp()) ?>"><span><?php echo $this->__('IPInfoDB Lookup') ?></span></button>
-					<?php endif; ?>
-					<button onclick="window.open('http://www.ip2location.com/<?php echo $this->getCustomerRegIp() ?>','lookup',''); return false;"
-							title="<?php echo $this->__('Check the location of %s in a popup', $this->getCustomerRegIp()) ?>"><span><?php echo $this->__('ip2location.com Lookup') ?></span></button>
-				</td>
-				<?php endif; ?>
+                <td><strong><?php echo $this->__('Account Created from:') ?></strong></td>
+                <td>
+                	<?php if ($this->isCustomerCreatedInAdmin()): ?>
+                		<?php echo $this->__('Backend') ?>
+                	<?php else: ?>
+                		<?php echo $this->__('Frontend') ?>
+                	<?php endif; ?>
+                </td>
+            </tr>
+            <tr>
+                <td><strong><?php echo $this->__('HTTP Referrer -> Request:') ?></strong></td>
+                <td>
+                    <?php echo $this->getCustomerRequestHtml() ?>
+                </td>
+            </tr>
+            <tr>
+                <td><strong><?php echo $this->__('Remote Address:') ?></strong></td>
+                <td>
+                    <?php echo $this->getCustomerRegIpHtml() ?>
+        			<?php if ($this->isValidIp()): ?>
+        				<?php if ($this->isIpInfoDbEnabled()): ?>
+        				<button onclick="customerRegIp.lookup(); return false;"
+        						title="<?php echo $this->__('Check the location of %s via AJAX', $this->getCustomerRegIp()) ?>"><span><?php echo $this->__('IPInfoDB Lookup') ?></span></button>
+        				<?php endif; ?>
+        				<button onclick="window.open('http://www.ip2location.com/<?php echo $this->getCustomerRegIp() ?>','lookup',''); return false;"
+        						title="<?php echo $this->__('Check the location of %s in a popup', $this->getCustomerRegIp()) ?>"><span><?php echo $this->__('ip2location.com Lookup') ?></span></button>
+        			<?php endif; ?>
+                </td>
             </tr>
         </table>
         <div id="customerregip-lookup-result" style="display: none;"></div>
