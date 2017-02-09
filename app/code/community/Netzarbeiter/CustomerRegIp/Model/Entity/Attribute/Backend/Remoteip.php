@@ -42,7 +42,9 @@ class Netzarbeiter_CustomerRegIp_Model_Entity_Attribute_Backend_Remoteip
     protected function _getRemoteAddr()
     {
         try {
-            $remoteAddr = Mage::helper('core/http')->getRemoteAddr();
+            // this will get proxies, load balancers etc
+            //$remoteAddr = Mage::helper('core/http')->getRemoteAddr();
+            $remoteAddr = Mage::helper('customerregip')->getRemoteAddr();
         } catch (Exception $e) {
             $remoteAddr = (string)$e->getMessage();
         }
