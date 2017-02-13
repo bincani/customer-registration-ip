@@ -70,6 +70,30 @@ class Netzarbeiter_CustomerRegIp_Block_Adminhtml_Customer_Edit_Tab_View_Regip
         return $httpRequest;
     }
 
+    public function getCustomerRequestProtocol()
+    {
+        $httpRequest = $this->getCustomer()->getRegistrationHttpRequest();
+        if (empty($httpRequest)) {
+            $html = $this->__('- REQUEST INFO UNAVAILABLE -');
+        }
+        else {
+            $request = Mage::helper('customerregip')->parseRequest($httpRequest);
+            //Mage::log(sprintf("%s->httpRequest=%s:%s", __METHOD__, $httpRequest, print_r($request, true)) );
+            $httpReferrer = "unknown";
+            if ($request[0] && array_key_exists('scheme', $request[0])) {
+               $httpReferrer = $request[1]['scheme'];
+            }            
+            $httpRequest = "unknown";
+            if ($request[1] && array_key_exists('scheme', $request[1])) {
+               $httpRequest = $request[1]['scheme'];
+            }
+            $requestScheme = sprintf("%s -> %s", $httpReferrer, $httpRequest);
+            $html = sprintf('%s', $requestScheme);
+        }
+        return $html;
+    }
+
+
     /**
      * Return the customer rquest
      *
@@ -80,16 +104,19 @@ class Netzarbeiter_CustomerRegIp_Block_Adminhtml_Customer_Edit_Tab_View_Regip
         $httpRequest = $this->getCustomer()->getRegistrationHttpRequest();
         if (empty($httpRequest)) {
             $html = $this->__('- REQUEST INFO UNAVAILABLE -');
-        } else {
-            $storeId = Mage::app()->getWebsite(true)->getDefaultGroup()->getDefaultStoreId();
-            $baseUrl = Mage::getBaseUrl(); // will get admin url
-            $baseUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
-            $pattern = sprintf("/%s/", str_replace("/", "\/", $baseUrl) );
-            // for debug
-            //$html = sprintf("<pre>%s</pre>", $pattern);
-            if (preg_match($pattern, $httpRequest)) {
-                $httpRequest = preg_replace($pattern, "", $httpRequest);
+        }
+        else {
+            $request = Mage::helper('customerregip')->parseRequest($httpRequest);
+            //Mage::log(sprintf("%s->httpRequest=%s:%s", __METHOD__, $httpRequest, print_r($request, true)) );
+            $httpReferrer = "no http referer";
+            if (!empty($request[0]) && array_key_exists('url', $request[0])) {
+                $httpReferrer = $request[0]['url'];
             }
+            $httpRequest = "invalid";
+            if ($request[1] && array_key_exists('url', $request[1])) {
+               $httpRequest = $request[1]['url'];
+            }
+            $httpRequest = sprintf("%s -> %s", $httpReferrer, $httpRequest);
             $html = sprintf('%s', $httpRequest);
         }
         return $html;

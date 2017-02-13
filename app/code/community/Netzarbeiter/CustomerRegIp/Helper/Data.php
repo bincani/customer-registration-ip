@@ -50,4 +50,63 @@ class Netzarbeiter_CustomerRegIp_Helper_Data extends Mage_Core_Helper_Abstract
         }
     }
 
+    /**
+     * @param $httpRequest
+     * @return mixed
+     */
+    public function parseRequest($httpRequest) {
+        $request = array();
+        $parts = preg_split("/\->/", $httpRequest);
+        if ($parts[0] && filter_var($parts[0], FILTER_VALIDATE_URL)) {
+            $httpReferer = parse_url($parts[0]);
+            $request[0] = array(
+                'scheme' => $httpReferer['scheme'],
+                'url' => $this->_stripBase($parts[0])
+            );
+        }
+        else {
+            $request[0] = "";
+        }
+        if ($parts[1] && filter_var($parts[1], FILTER_VALIDATE_URL)) {
+            $httpRequest = parse_url($parts[1]);
+            $request[1] = array(
+                'scheme' => $httpRequest['scheme'],
+                'url' => $this->_stripBase($parts[1])
+            );
+        }
+        else {
+            $request[1] = "";
+        }
+        return $request;
+    }
+
+    /**
+     * @param $url
+     * @return mixed
+     */
+    private function _stripBase($url) {
+        $storeId = Mage::app()->getWebsite(true)->getDefaultGroup()->getDefaultStoreId();
+        $baseUrl = Mage::getBaseUrl(); // will get admin url
+        $baseUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+        $pattern = sprintf("/%s/", str_replace("/", "\/", $baseUrl));
+        $home = "";
+        if (preg_match($pattern, $url)) {
+            if ($url == $baseUrl) {
+                $home = "HOME";
+            }
+            $url = preg_replace($pattern, $home, $url);
+        }
+        else {
+            $secureBaseUrl = Mage::app()->getStore($storeId)->getBaseSecureUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+            $pattern = sprintf("/%s/", str_replace("/", "\/", $secureBaseUrl));
+            if (preg_match($pattern, $url)) {
+                if ($url == $secureBaseUrl) {
+                    $home = "HOME";
+                }
+                $url = preg_replace($pattern, $home, $url);
+            }
+        }
+        return $url;
+    }
+
 }

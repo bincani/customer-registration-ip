@@ -36,6 +36,12 @@
                 </td>
             </tr>
             <tr>
+                <td><strong><?php echo $this->__('Protocol:') ?></strong></td>
+                <td>
+                    <?php echo $this->getCustomerRequestProtocol() ?>
+                </td>
+            </tr>
+            <tr>
                 <td><strong><?php echo $this->__('HTTP Referrer -> Request:') ?></strong></td>
                 <td>
                     <?php echo $this->getCustomerRequestHtml() ?>
