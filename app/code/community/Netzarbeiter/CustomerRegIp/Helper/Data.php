@@ -22,7 +22,7 @@ class Netzarbeiter_CustomerRegIp_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * @return bool|string
      */
-    public function getRemoteAddr()
+    public function getRemoteAddr($ipToLong = false)
     {
         $remoteAddr = $this->_getIpAddress();
         if (!$remoteAddr) {

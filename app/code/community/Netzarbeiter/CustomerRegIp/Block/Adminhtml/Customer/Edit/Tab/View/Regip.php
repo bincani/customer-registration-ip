@@ -90,7 +90,7 @@ class Netzarbeiter_CustomerRegIp_Block_Adminhtml_Customer_Edit_Tab_View_Regip
             if (preg_match($pattern, $httpRequest)) {
                 $httpRequest = preg_replace($pattern, "", $httpRequest);
             }
-            $html .= sprintf('%s', $httpRequest);
+            $html = sprintf('%s', $httpRequest);
         }
         return $html;
     }
