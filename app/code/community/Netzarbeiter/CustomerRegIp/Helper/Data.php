@@ -97,7 +97,7 @@ class Netzarbeiter_CustomerRegIp_Helper_Data extends Mage_Core_Helper_Abstract
             $url = preg_replace($pattern, $home, $url);
         }
         else {
-            $secureBaseUrl = Mage::app()->getStore($storeId)->getBaseSecureUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+            $secureBaseUrl = Mage::app()->getStore($storeId)->getConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);
             $pattern = sprintf("/%s/", str_replace("/", "\/", $secureBaseUrl));
             if (preg_match($pattern, $url)) {
                 if ($url == $secureBaseUrl) {
